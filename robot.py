@@ -1,5 +1,6 @@
 from leg import Leg
 from kit import Kit
+import time
 
 class Robot:
     def __init__(self, cog, m, f, s):
@@ -9,7 +10,7 @@ class Robot:
         self.s = s
         self.kit = Kit()
         self.f1 = Leg(0, 1, "f1", self.kit, 60, [-25, 30], [20, 20], (f, s, 0))
-        self.f2 = Leg(2, 4, "f2", self.kit, 120, [25, 30], [20, 20], (f, -s, 0))
+        self.f2 = Leg(2, 3, "f2", self.kit, 120, [25, 30], [20, 20], (f, -s, 0))
         self.m1 = Leg(7, 8, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
         self.m2 = Leg(9, 10, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
         self.b1 = Leg(10, 11, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
@@ -118,7 +119,7 @@ class Robot:
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
         return frames 
     
-    def simulate_ripple(self, inc, time):
+    def simulate_ripple(self, inc, _time):
         frames = []
         self.f1.inc_up_angle(inc/2)
         self.f2.inc_up_angle(-inc/4)
@@ -126,8 +127,9 @@ class Robot:
         self.m2.inc_up_angle(-inc/2)
         self.b1.inc_up_angle(-inc/4)
         self.b2.inc_up_angle(-inc/4)
+        time.sleep(0.2)
         frames.append(self.get_cords())
-        for i in range(time):
+        for i in range(_time):
             self.f1.inc_up_angle(-inc/2)
             self.f2.inc_up_angle(inc/4)
             self.m1.inc_up_angle(inc/4)
@@ -136,6 +138,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f1.inc_below_angle(-inc)
             self.m2.inc_below_angle(-inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.f1.inc_up_angle(-inc/2)
             self.f2.inc_up_angle(inc/4)
@@ -145,6 +148,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f1.inc_below_angle(inc)
             self.m2.inc_below_angle(inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
             self.f1.inc_up_angle(inc/4)
@@ -155,6 +159,7 @@ class Robot:
             self.b2.inc_up_angle(-inc/2)
             self.m1.inc_below_angle(-inc)
             self.b2.inc_below_angle(-inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(inc/4)
@@ -164,6 +169,7 @@ class Robot:
             self.b2.inc_up_angle(-inc/2)
             self.m1.inc_below_angle(inc)
             self.b2.inc_below_angle(inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
             self.f1.inc_up_angle(inc/4)
@@ -174,6 +180,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f2.inc_below_angle(-inc)
             self.b1.inc_below_angle(-inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(-inc/2)
@@ -183,6 +190,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f2.inc_below_angle(inc)
             self.b1.inc_below_angle(inc)
+            time.sleep(0.2)
             frames.append(self.get_cords())
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
         return frames
