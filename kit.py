@@ -13,4 +13,3 @@ class Kit:
     def set_angle(self, num, angle):
         self.kit.servo[num].angle = angle
         print(num, angle)
-        time.sleep(0.2)
