@@ -16,6 +16,8 @@ class Robot:
         self.b1 = Leg(10, 11, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
         self.b2 = Leg(12, 13, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
         self.functional = [True]*6
+        self.frames = []
+        self.delay = 0.2
 
     def get_polygon(self):
         x_cor = [self.m+self.cog[0], self.f+self.cog[0], -self.f+self.cog[0], -self.m+self.cog[0], -self.f+self.cog[0], self.f+self.cog[0], self.m+self.cog[0]]
@@ -65,6 +67,10 @@ class Robot:
         label.append(pol_cor[3])
         return [x_cor, y_cor, z_cor, label] 
 
+    def post_process(self):
+        self.frames.append(self.get_cords())
+        time.sleep(self.delay)    
+    
     def simulate_tripod(self, inc, time):
         frames = []
         self.f1.inc_up_angle(inc/2)
@@ -73,7 +79,7 @@ class Robot:
         self.m1.inc_up_angle(inc/2)
         self.b2.inc_up_angle(inc/2)
         self.f2.inc_up_angle(inc/2)
-        frames.append(self.get_cords())
+        self.post_process()
         for i in range(time):
             self.f2.inc_up_angle(-inc/2)
             self.m1.inc_up_angle(-inc/2)
@@ -84,7 +90,7 @@ class Robot:
             self.f2.inc_below_angle(-inc)
             self.m2.inc_below_angle(-inc)
             self.b2.inc_below_angle(-inc)
-            frames.append(self.get_cords())
+            self.post_process()
             self.f2.inc_up_angle(-inc/2)
             self.m1.inc_up_angle(-inc/2)
             self.b2.inc_up_angle(-inc/2)
@@ -94,7 +100,7 @@ class Robot:
             self.f2.inc_below_angle(inc)
             self.m2.inc_below_angle(inc)
             self.b2.inc_below_angle(inc)
-            frames.append(self.get_cords())
+            self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
             self.f2.inc_up_angle(inc/2)
             self.m1.inc_up_angle(inc/2)
@@ -105,7 +111,7 @@ class Robot:
             self.m1.inc_below_angle(-inc)
             self.b1.inc_below_angle(-inc)
             self.f1.inc_below_angle(-inc)
-            frames.append(self.get_cords())
+            self.post_process()
             self.f2.inc_up_angle(inc/2)
             self.m1.inc_up_angle(inc/2)
             self.b2.inc_up_angle(inc/2)
@@ -115,7 +121,7 @@ class Robot:
             self.m1.inc_below_angle(inc)
             self.b1.inc_below_angle(inc)
             self.f1.inc_below_angle(inc)
-            frames.append(self.get_cords())
+            self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
         return frames 
     
@@ -127,8 +133,7 @@ class Robot:
         self.m2.inc_up_angle(-inc/2)
         self.b1.inc_up_angle(-inc/4)
         self.b2.inc_up_angle(-inc/4)
-        time.sleep(0.2)
-        frames.append(self.get_cords())
+        self.post_process()
         for i in range(_time):
             self.f1.inc_up_angle(-inc/2)
             self.f2.inc_up_angle(inc/4)
@@ -138,8 +143,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f1.inc_below_angle(-inc)
             self.m2.inc_below_angle(-inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.f1.inc_up_angle(-inc/2)
             self.f2.inc_up_angle(inc/4)
             self.m1.inc_up_angle(inc/4)
@@ -148,8 +152,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f1.inc_below_angle(inc)
             self.m2.inc_below_angle(inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(inc/4)
@@ -159,8 +162,7 @@ class Robot:
             self.b2.inc_up_angle(-inc/2)
             self.m1.inc_below_angle(-inc)
             self.b2.inc_below_angle(-inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(inc/4)
             self.m1.inc_up_angle(-inc/2)
@@ -169,8 +171,7 @@ class Robot:
             self.b2.inc_up_angle(-inc/2)
             self.m1.inc_below_angle(inc)
             self.b2.inc_below_angle(inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(-inc/2)
@@ -180,8 +181,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f2.inc_below_angle(-inc)
             self.b1.inc_below_angle(-inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.f1.inc_up_angle(inc/4)
             self.f2.inc_up_angle(-inc/2)
             self.m1.inc_up_angle(inc/4)
@@ -190,8 +190,7 @@ class Robot:
             self.b2.inc_up_angle(inc/4)
             self.f2.inc_below_angle(inc)
             self.b1.inc_below_angle(inc)
-            time.sleep(0.2)
-            frames.append(self.get_cords())
+            self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
         return frames
 
