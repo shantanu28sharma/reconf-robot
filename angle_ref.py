@@ -4,21 +4,17 @@ from adafruit_servokit import ServoKit
 
 kit = ServoKit(channels = 16)
 i = 0
+pin1 = 14
+pin2 = 12
 kit.servo[0].set_pulse_width_range(660, 2300)
 kit.servo[1].set_pulse_width_range(610, 2250)
-kit.servo[3].set_pulse_width_range(400, 2450)
-kit.servo[2].set_pulse_width_range(550, 2250)
+kit.servo[pin1].set_pulse_width_range(400, 2450)
+kit.servo[pin2].set_pulse_width_range(490, 2270)
 while i<3:
-    kit.servo[0].angle = 30
-    kit.servo[2].angle = 150
+    kit.servo[pin1].angle = 110
+    kit.servo[pin2].angle = 110
     time.sleep(0.5)
-    kit.servo[1].angle = 150
-    kit.servo[3].angle = 150
+    kit.servo[pin1].angle = 90
+    kit.servo[pin2].angle = 90
     time.sleep(0.5)
-    kit.servo[0].angle = 90
-    kit.servo[2].angle = 90
-    time.sleep(0.5)
-    kit.servo[1].angle = 90
-    kit.servo[3].angle = 90
-    time.sleep(0.5)
-    i = i+1
+    i+=1

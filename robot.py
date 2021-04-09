@@ -10,11 +10,11 @@ class Robot:
         self.s = s
         self.kit = Kit()
         self.f1 = Leg(0, 1, "f1", self.kit, 60, [-25, 30], [20, 20], (f, s, 0))
-        self.f2 = Leg(2, 3, "f2", self.kit, 120, [25, 30], [20, 20], (f, -s, 0))
-        self.m1 = Leg(7, 8, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
-        self.m2 = Leg(9, 10, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
-        self.b1 = Leg(10, 11, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
-        self.b2 = Leg(12, 13, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
+        self.f2 = Leg(2, 12, "f2", self.kit, 120, [25, 30], [20, 20], (f, -s, 0))
+        self.m1 = Leg(4, 14, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
+        self.m2 = Leg(6, 7, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
+        self.b1 = Leg(8, 9, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
+        self.b2 = Leg(10, 11, "f1", self.kit, 60, [-15, 0], [20, 20], (f, s, 0))
         self.functional = [True]*6
         self.frames = []
         self.delay = 0.2
@@ -126,7 +126,6 @@ class Robot:
         return frames 
     
     def simulate_ripple(self, inc, _time):
-        frames = []
         self.f1.inc_up_angle(inc/2)
         self.f2.inc_up_angle(-inc/4)
         self.m1.inc_up_angle(-inc/4)
@@ -192,7 +191,6 @@ class Robot:
             self.b1.inc_below_angle(inc)
             self.post_process()
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
-        return frames
 
     def fault(self, arr):
         for leg in arr:
@@ -216,7 +214,7 @@ class Robot:
     def reconfigure(self):
         num = self.get_number_legs()
         if num == 6:
-            self.simulate_ripple(30, 2)
+            self.simulate_tripod(20, 2)
             # do nothing
         elif num == 5:
             print()

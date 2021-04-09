@@ -1,19 +1,15 @@
 import time
 import math
-from adafruit_servokit import ServoKit
+from kit import Kit
 
-kit = ServoKit(channels = 16)
 i = 0
-pin1 = 2
-pin2 = 3
-kit.servo[pin1].set_pulse_width_range(400, 2250)
-kit.servo[pin2].set_pulse_width_range(550, 2250)
+pin1 = 15 
+pin2 = 12
 i = 0
-while i<3:
-    kit.servo[pin1].angle = 180
-    kit.servo[pin1].angle = 90
-    time.sleep(0.5)
-    kit.servo[pin2].angle = 180
-    kit.servo[pin2].angle = 90
-    time.sleep(0.5)
-    i = i+1
+kit = Kit()
+while i<1:
+    j = 1
+    while j<12:
+        kit.set_angle(j, 90)
+        j+=2
+    i=i+1
