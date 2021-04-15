@@ -4,8 +4,8 @@ from adafruit_servokit import ServoKit
 
 kit = ServoKit(channels = 16)
 i = 0
-pin1 = 14
-pin2 = 12
+pin1 = 4
+pin2 = 5
 kit.servo[0].set_pulse_width_range(660, 2300)
 kit.servo[1].set_pulse_width_range(610, 2250)
 kit.servo[pin1].set_pulse_width_range(400, 2450)
