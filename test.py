@@ -8,11 +8,9 @@ pin2 = 12
 i = 0
 kit = Kit()
 while i<1:
-    j = 1
+    j = 0
     while j<12:
         kit.set_angle(j, 90)
         j+=2
-        time.sleep(1)
-        kit.set_angle(j, 120)
         time.sleep(1)
     i=i+1
