@@ -8,14 +8,19 @@ class Leg:
         self.origin = origin
         self.label = label
         self.angle_x = ref_angle
+        self.init_up_angle = init_angle[0]
+        self.init_lo_angle = init_angle[1]
         self.angle_up = init_angle[0]
         self.angle_lo = init_angle[1]
         self.pinup = pinup
         self.pinlo = pinlo
         self.disable = False
         self.kit = kit
-        self.kit.set_angle(pinup, 90+self.angle_up)
-        self.kit.set_angle(pinlo, 90+self.angle_lo)
+        self.initialize()
+
+    def initialize(self):
+        self.kit.set_angle(self.pinup, 90+self.init_up_angle)
+        self.kit.set_angle(self.pinlo, 90+self.init_lo_angle)
 
     def _disable(self):
         if self.disable == True:
