@@ -2,7 +2,7 @@ import math
 import numpy as np
 
 class Leg:
-    def __init__(self, pinup, pinlo, label, kit, ref_angle, init_angle, length, origin):
+    def __init__(self, pinup, pinlo, label, kit, ref_angle, init_angle, length, origin, boid):
         self.l_up = length[0]
         self.l_lo = length[1]
         self.origin = origin
@@ -16,11 +16,15 @@ class Leg:
         self.pinlo = pinlo
         self.disable = False
         self.kit = kit
+        self.boid = boid
         self.initialize()
 
     def initialize(self):
         self.kit.set_angle(self.pinup, 90+self.init_up_angle)
         self.kit.set_angle(self.pinlo, 90+self.init_lo_angle)
+
+    def change_boid(self, boid):
+        self.boid = boid
 
     def _disable(self):
         if self.disable == True:

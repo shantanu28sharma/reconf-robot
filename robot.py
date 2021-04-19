@@ -9,13 +9,14 @@ class Robot:
         self.f = f
         self.s = s
         self.kit = Kit()
-        self.f1 = Leg(12, 1, "f1", self.kit, 60, [-25, 20], [20, 20], (f, s, 0))
-        self.f2 = Leg(4, 5, "f2", self.kit, 120, [25, 20], [20, 20], (f, -s, 0))
-        self.m1 = Leg(0, 3, "m1", self.kit, 60, [0, 20], [20, 20], (f, s, 0))
-        self.m2 = Leg(6, 7, "m2", self.kit, 60, [0, 20], [20, 20], (f, s, 0))
-        self.b1 = Leg(8, 9, "b1", self.kit, 60, [25, 20], [20, 20], (f, s, 0))
-        self.b2 = Leg(10, 11, "b2", self.kit, 60, [-25, 20], [20, 20], (f, s, 0))
+        self.f1 = Leg(12, 1, "f1", self.kit, 60, [-25, 20], [20, 20], (f, s, 0), 1)
+        self.f2 = Leg(4, 5, "f2", self.kit, 120, [25, 20], [20, 20], (f, -s, 0), 2)
+        self.m1 = Leg(0, 3, "m1", self.kit, 60, [0, 20], [20, 20], (f, s, 0), 1)
+        self.m2 = Leg(6, 7, "m2", self.kit, 60, [0, 20], [20, 20], (f, s, 0), 2)
+        self.b1 = Leg(8, 9, "b1", self.kit, 60, [25, 20], [20, 20], (f, s, 0), 1)
+        self.b2 = Leg(10, 11, "b2", self.kit, 60, [-25, 20], [20, 20], (f, s, 0), 2)
         self.functional = [True]*6
+        self.legs = [self.f1, self.f2, self.m2, self.b2, self.b1, self.m1]
         self.frames = []
         self.delay = 0.2
 
@@ -203,16 +204,26 @@ class Robot:
             self.post_process(6)
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
 
+    def boid_count(self):
+        boid1 = 0
+        boid2 = 0
+        for leg in legs:
+            if leg.boid == 1:
+                boid1+=1
+            else:
+                boid2+=1
+        return (boid1, boid2)
+
     def fault(self, arr):
         for leg in arr:
-            self.functional[leg.index] = False
-            leg._disable()
+            self.functional[leg] = False
+            legs[leg]._disable()
         self.reconfigure()
 
     def recover(self, arr):
         for leg in arr:
-            self.functional[leg.index] = True
-            leg._enable()
+            self.functional[leg] = True
+            legs[leg]._enable()
         self.reconfigure()
     
     def get_number_legs(self):
@@ -225,23 +236,36 @@ class Robot:
     def reconfigure(self):
         num = self.get_number_legs()
         if num == 6:
+            print("### Robot has Six legs ###")
             # self.simulate_tripod(40, 30, 3)
             self.simulate_ripple(50, 30, 10)
             # do nothing
         elif num == 5:
-            print()
+            print("### Robot has Five legs ###")
+            for (index, leg) in enumerate(functional):
+                if leg == False:
+                    remove = (index+3)%6
+                    self.fault([remove])
+                    break
             #disable one odd leg walk with four legs
         elif num == 4:
-            print()
+            print("### Robot has Four legs ###")
+            (boid1, boid2) = self.boid_count()
+            if boid1 == boid2:
+                
+            elif boid1 > boid2:
+
+            else:
+
             # reconfigure according to the position of functional legs
         elif num == 3:
-            print()
+            print("### Robot has Three legs ###")
             # disable one odd leg, crawl witb two legs
         elif num == 2:
-            print()
+            print("### Robot has Two legs ###")
             #   reconfigure according to the position of legs and then crawl
         else:
-            print()
+            print("### Robot has One leg ###")
             # crawl
         self.initialize()
         return
