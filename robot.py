@@ -85,7 +85,7 @@ class Robot:
     
     def simulate_tripod(self, inc, inc_down, _time, move = 1, direc = 1):
         print("##### Tripod Gait #####")
-        rotate = (move)*(direction)
+        rotate = (move)*(direc)
         self.f1.inc_up_angle(inc/2*(rotate))
         self.m2.inc_up_angle(-inc/2*(-rotate))
         self.b1.inc_up_angle(inc/2*(rotate))
@@ -139,7 +139,7 @@ class Robot:
     
     def simulate_ripple(self, inc, inc_down, _time, move = 1, direc = 1):
         print("###### Ripple Gait #######")
-        rotate = (move)*(direction)
+        rotate = (move)*(direc)
         self.f1.inc_up_angle(inc/2*(rotate))
         self.m1.inc_up_angle(-inc/2*(rotate))
         self.m2.inc_up_angle(-inc/2*(-rotate))
@@ -204,10 +204,16 @@ class Robot:
             self.post_process(6)
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
 
+    def simulate_quadruped(self, legs, inc, time, move = 1, direc = 1):
+        print("#### Walking with four legs ####")
+
+    def simulate_bipod(self, legs, inc, time, move = 1, direc = 1):
+        print("#### Walking with two legs ####")
+        
     def boid_count(self):
         boid1 = 0
         boid2 = 0
-        for leg in legs:
+        for leg in self.legs:
             if leg.boid == 1:
                 boid1+=1
             else:
@@ -217,13 +223,13 @@ class Robot:
     def fault(self, arr):
         for leg in arr:
             self.functional[leg] = False
-            legs[leg]._disable()
+            self.legs[leg]._disable()
         self.reconfigure()
 
     def recover(self, arr):
         for leg in arr:
             self.functional[leg] = True
-            legs[leg]._enable()
+            self.legs[leg]._enable()
         self.reconfigure()
     
     def get_number_legs(self):
@@ -237,12 +243,12 @@ class Robot:
         num = self.get_number_legs()
         if num == 6:
             print("### Robot has Six legs ###")
-            # self.simulate_tripod(40, 30, 3)
-            self.simulate_ripple(50, 30, 10)
+            # self.simulate_tripod(40, 30, 3, 1, 1)
+            # self.simulate_ripple(50, 30, 10, 1, 1)
             # do nothing
         elif num == 5:
             print("### Robot has Five legs ###")
-            for (index, leg) in enumerate(functional):
+            for (index, leg) in enumerate(self.functional):
                 if leg == False:
                     remove = (index+3)%6
                     self.fault([remove])
@@ -252,26 +258,73 @@ class Robot:
             print("### Robot has Four legs ###")
             (boid1, boid2) = self.boid_count()
             if boid1 == boid2:
-                
+                print()
+                #find symmetry line and arrange the legs accordingly
             elif boid1 > boid2:
-
+                print("inequal boid")
+                found = False
+                ind = 0
+                while True:
+                    leg = self.legs[ind]
+                    if ind == 6:
+                        ind = 0
+                    if leg.disable == False and leg.boid == 2:
+                        found = True
+                    elif found and leg.disable == False and leg.boid == 1:
+                        leg.change_boid(2)
+                        break
+                    ind+=1
+                #move one leg from one boid to another
             else:
-
+                print("inequal boid")
+                found = False
+                ind = 0
+                while True:
+                    leg = self.legs[ind]
+                    if ind == 6:
+                        ind = 0
+                    if leg.disable == False and leg.boid == 1:
+                        found = True
+                    elif found and leg.disable == False and leg.boid == 2:
+                        leg.change_boid(1)
+                        break
+                    ind+=1
+                #move one bod to another
             # reconfigure according to the position of functional legs
         elif num == 3:
             print("### Robot has Three legs ###")
-            # disable one odd leg, crawl witb two legs
+            # disable one odd leg, crawl with two legs
+            dis = 10000
+            ind1 = -1
+            ind2 = -1
+            functional = self.functional + self.functional
+            prev = -1
+            for (ind, state) in enumerate(functional):
+                if state and prev==-1:
+                    prev = ind
+                elif state:
+                    if abs(prev-ind%6) < dis:
+                        ind1 = ind
+                        ind2 = prev
+                        dis = abs(prev-ind%6)
+                    prev = ind
+            for (ind, leg) in enumerate(self.legs):
+                if ind == ind1:
+                    leg.change_boid(1)
+                elif ind == ind2:
+                    leg.change_boid(2)
+                elif leg.disable == False:
+                    self.fault([ind])
+            self.reconfigure()
         elif num == 2:
+            functional_legs = []
+            for leg in self.legs:
+                if leg.disable == False:
+                    functional_legs.append(leg)
             print("### Robot has Two legs ###")
-            #   reconfigure according to the position of legs and then crawl
+            # reconfigure according to the position of legs and then crawl
         else:
             print("### Robot has One leg ###")
             # crawl
         self.initialize()
-        return
-            
-    def walk(self):
-        return
-    
-    def crawl(self):
         return
