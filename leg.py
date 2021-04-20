@@ -29,13 +29,13 @@ class Leg:
     def _disable(self):
         if self.disable == True:
             return
-        self.inc_below_angle(-50)
+        self.inc_below_angle(50)
         self.disable = True
     
     def _enable(self):
         if self.disable == False:
             return
-        self.inc_below_angle(50)
+        self.inc_below_angle(-50)
         self.disable = False
     
     def inc_up_angle(self, inc):
