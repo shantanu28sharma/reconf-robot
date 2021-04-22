@@ -203,8 +203,68 @@ class Robot:
             self.post_process(6)
             self.cog = (self.cog[0], self.cog[1]+5, self.cog[2])
 
-    def simulate_quadruped(self, legs, inc, time, move = 1, direc = 1):
+    def simulate_quadruped(self, legs, inc, inc2, time, move = 1, direc = 1):
         print("#### Walking with four legs ####")
+        f1 = legs[0]
+        f2 = legs[1]
+        b1 = legs[0]
+        b2 = legs[1]
+        f1.inc_up_angle(inc/2)
+        f2.inc_up_angle(inc/2)
+        b1.inc_up_angle(-inc/6)
+        b2.inc_up_angle(inc/6)
+        self.post_process(0)
+        for _ in range(time):
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(-inc/2)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(inc/6)
+            f2.inc_below_angle(inc2)
+            self.post_process(1)
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(-inc/2)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(inc/6)
+            f2.inc_below_angle(-inc2)
+            self.post_process(2)
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(inc/6)
+            b1.inc_up_angle(inc/2)
+            b2.inc_up_angle(inc/6)
+            b1.inc_below_angle(inc2)
+            self.post_process(3)
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(inc/6)
+            b1.inc_up_angle(inc/2)
+            b2.inc_up_angle(inc/6)
+            b1.inc_below_angle(-inc2)
+            self.post_process(4)
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(inc/6)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(-inc/2)
+            b2.inc_below_angle(inc2)
+            self.post_process(5)
+            f1.inc_up_angle(-inc/6)
+            f2.inc_up_angle(inc/6)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(-inc/2)
+            b2.inc_below_angle(-inc2)
+            self.post_process(6)
+            f1.inc_up_angle(inc/2)
+            f2.inc_up_angle(-inc/2)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(inc/6)
+            f1.inc_below_angle(inc2)
+            self.post_process(7)
+            f1.inc_up_angle(inc/2)
+            f2.inc_up_angle(-inc/2)
+            b1.inc_up_angle(-inc/6)
+            b2.inc_up_angle(inc/6)
+            f1.inc_below_angle(-inc2)
+            self.post_process(8)
+
+
 
     def simulate_bipod(self, legs, inc, inc2, time, move = 1, direc = 1):
         print("#### Walking with two legs ####")
@@ -212,7 +272,7 @@ class Robot:
         f2 = legs[1]
         f1.inc_up_angle(inc/2)
         f2.inc_up_angle(-inc/2)
-        self.post_process(-1)
+        self.post_process(0)
         for _ in range(time):
             f1.inc_up_angle(-inc)
             f2.inc_up_angle(inc)
@@ -284,40 +344,63 @@ class Robot:
                     return
             #disable one odd leg walk with four legs
         elif num == 4:
-            print("### Robot has Four legs ###")
-            (boid1, boid2) = self.boid_count()
-            if boid1 == boid2:
-                print()
-                #find symmetry line and arrange the legs accordingly
-            elif boid1 > boid2:
-                print("inequal boid")
-                found = False
-                ind = 0
-                while True:
-                    leg = self.legs[ind]
-                    if ind == 6:
-                        ind = 0
-                    if leg.disable == False and leg.boid == 2:
-                        found = True
-                    elif found and leg.disable == False and leg.boid == 1:
-                        leg.change_boid(2)
-                        break
-                    ind+=1
-                #move one leg from one boid to another
-            else:
-                print("inequal boid")
-                found = False
-                ind = 0
-                while True:
-                    leg = self.legs[ind]
-                    if ind == 6:
-                        ind = 0
-                    if leg.disable == False and leg.boid == 1:
-                        found = True
-                    elif found and leg.disable == False and leg.boid == 2:
-                        leg.change_boid(1)
-                        break
-                    ind+=1
+                ind1 = -1
+                ind2 = -1
+                for (index,leg) in enumerate(self.legs):
+                    if leg.disable and ind1==-1:
+                        ind1 = index
+                    elif leg.disable and ind2==-1:
+                        ind2 = index
+                diff = abs(ind1-ind2)
+                functional = []
+                if diff == 3:
+                    num = 0
+                    while num < 5:
+                        if len(functional) == 0 and self.legs[num].disable == False and self.legs[num+1].disable == False:
+                            f1 = self.legs[num]
+                            f2 = self.legs[num+1]
+                            f1.inc_up_angle(-10)
+                            f2.inc_up_angle(10)
+                            functional.append(f1)
+                            functional.append(f2)
+                        elif self.legs[num].disable == False and self.legs[num+1].disable == False:
+                            b1 = self.legs[num+1]
+                            b2 = self.legs[num]
+                            b1.inc_up_angle(10)
+                            b2.inc_up_angle(-10)
+                            functional.append(b1)
+                            functional.append(b2)
+                            break;
+                        num+=1
+                    self.simualte_quadruped(functional, 30, 30, 3)
+                elif diff == 2:
+                    num = 0
+                    while num < 5:
+                        if len(functional) == 0 and self.legs[num].disable == False and self.legs[num+1].disable == False:
+                            f1 = self.legs[num]
+                            f2 = self.legs[num+1]
+                            f1.inc_up_angle(-10)
+                            f2.inc_up_angle(10)
+                            functional.append(f1)
+                            functional.append(f2)
+                        elif self.legs[num].disable == False and self.legs[num+1].disable == False:
+                            b1 = self.legs[num+1]
+                            b2 = self.legs[num]
+                            b1.inc_up_angle(10)
+                            b2.inc_up_angle(-10)
+                            functional.append(b1)
+                            functional.append(b2)
+                            break;
+                        num+=1
+                    self.simualte_quadruped(functional, 30, 30, 3)
+                elif diff == 1:
+                    f1 = self.legs[(ind1-2+6)%6]
+                    f2 = self.legs[(ind2+2)%6]
+                    b1 = self.legs[(ind1-1+6)%6]
+                    b2 = self.legs[(ind1+1)%6]
+                    b1.inc_up_angle(-20)
+                    b2.inc_up_angle(20)
+                    self.simulate_quadruped([f1, f2, b1, b2], 30, 30, 3)
                 #move one bod to another
             # reconfigure according to the position of functional legs
             self.info()
