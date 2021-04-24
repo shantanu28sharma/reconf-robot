@@ -5,7 +5,7 @@ from adafruit_servokit import ServoKit
 class Kit:
     def __init__(self):
        self.kit = ServoKit(channels = 16)
-       self.kit.servo[12].set_pulse_width_range(660, 2300)
+       self.kit.servo[12].set_pulse_width_range(860, 2300)
        self.kit.servo[1].set_pulse_width_range(610, 2250)
        self.kit.servo[4].set_pulse_width_range(550, 2250)
        self.kit.servo[5].set_pulse_width_range(400, 2450)
@@ -19,4 +19,8 @@ class Kit:
        self.kit.servo[11].set_pulse_width_range(740, 2350)
 
     def set_angle(self, num, angle):
+        print("kit:-", num, angle)
         self.kit.servo[num].angle = angle
+        
+    def pwm(self, num, range):
+        self.kit.servo[num].set_pulse_width_range(range[0], range[1])

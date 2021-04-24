@@ -17,11 +17,12 @@ class Leg:
         self.disable = False
         self.kit = kit
         self.boid = boid
-        self.initialize()
+        self.initialize(self.init_up_angle)
 
-    def initialize(self):
-        self.kit.set_angle(self.pinup, 90+self.init_up_angle)
+    def initialize(self, angle1 = 0):
+        self.kit.set_angle(self.pinup, 90+angle1)
         self.kit.set_angle(self.pinlo, 90+self.init_lo_angle)
+        self.angle_up = angle1
 
     def change_boid(self, boid):
         self.boid = boid
@@ -29,14 +30,18 @@ class Leg:
     def _disable(self):
         if self.disable == True:
             return
-        self.inc_below_angle(50)
+        self.inc_below_angle(60)
         self.disable = True
     
     def _enable(self):
         if self.disable == False:
             return
-        self.inc_below_angle(-50)
+        self.inc_below_angle(-60)
         self.disable = False
+
+    def set_up_angle(self, angle):
+        self.angle_up = angle
+        self.kit.set_angle(self.pinup, 90+self.angle_up)
     
     def inc_up_angle(self, inc):
         if self.disable:
@@ -74,4 +79,4 @@ class Leg:
         return self.get_up_cord(self.l_up + self.l_lo*math.cos(self.angle_lo*math.pi/180), self.angle_up, -self.l_lo*math.sin(self.angle_lo*math.pi/180))
 
     def calc_inv(self, height):
-        self.angle_lo = math.asin(height/self.l_lo)    
+        self.angle_lo = math.asin(height/self.l_lo)
